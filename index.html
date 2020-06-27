@@ -5,7 +5,13 @@
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
-        <table id="foreground"></table>
-        <table id="background"></table>
+        <div style="position: relative">
+            <table id="background" style="position: relative"></table>
+            <table id="foreground" style="position: absolute; top: 0"></table>
+        </div>
+        <div>
+            <h3 id="congratulation">Level Complete!</h3>
+            <p>Moves: <span id="moveCounter"></span></p>
+        </div>
     </body>
 </html>

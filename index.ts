@@ -62,11 +62,11 @@ class Field {
         public tiles: Tile[][],
     ) {
         if (tiles.length !== height) {
-            throw new Error('invalid height');
+            throw new Error("invalid height");
         }
 
         if (tiles.some(row => row.length !== width)) {
-            throw new Error('invalid width');
+            throw new Error("invalid width");
         }
     }
 
@@ -90,7 +90,7 @@ class Field {
         const height = arr[arr.length - 1];
 
         if (arr.length !== width * height + 2) {
-            throw new Error('invalid field');
+            throw new Error("invalid field");
         }
 
         const tiles = Array<Array<Tile>>();
@@ -114,9 +114,14 @@ class Game {
         readonly field: Field,
     ) {}
 
+    private _moveCount: number = 0;
+    public get moveCount(): number {
+        return this._moveCount;
+    }
+
     isWon(): boolean {
-        return this.field.tiles.every(
-            rowTiles => rowTiles.every(
+        return this.field.tiles.some(
+            rowTiles => rowTiles.some(
                 tile => tile.hasCat()
                     && tile.foregroundId === 1
                     && tile.backgroundType === BackgroundType.Exit
@@ -214,7 +219,10 @@ class Game {
 
             fromTile = this.field.tiles[fromRow][fromCol];
         }
+
+        this._moveCount += 1;
     }
+
 }
 
 function setBackgroundTileData(el: Element, tile: Tile): void {
@@ -245,16 +253,16 @@ function updateTileData($background: Element, $foreground: Element, game: Game):
     });
 }
 
-// const fieldData = Uint32Array.of(
-//     0x000100, 0x000100, 0x000100, 0x000100, 0x000100,
-//     0x000100, 0x311400, 0x102300, 0x202200, 0x000100,
-//     0x000100, 0x311300, 0x132300, 0x000000, 0x000100,
-//     0x000100, 0x311200, 0x132400, 0x000000, 0x000100,
-//     0x000100, 0x000100, 0x000001, 0x000100, 0x000100,
-//     5, 5
-// );
+const fieldData = Uint32Array.of(
+    0x000100, 0x000100, 0x000100, 0x000100, 0x000100,
+    0x000100, 0x311400, 0x102300, 0x202200, 0x000100,
+    0x000100, 0x311300, 0x132300, 0x000000, 0x000100,
+    0x000100, 0x311200, 0x132400, 0x000000, 0x000100,
+    0x000100, 0x000100, 0x000001, 0x000100, 0x000100,
+    5, 5
+);
 
-const fieldData = Uint32Array.from(window.location.hash.slice(1).split(',').map(s => Number(s)));
+// const fieldData = Uint32Array.from(window.location.hash.slice(1).split(",").map(s => Number(s)));
 
 console.log(fieldData.toString());
 
@@ -269,6 +277,8 @@ let toCol: number = -1;
 window.addEventListener("load", () => {
     const $foreground = document.getElementById("foreground");
     const $background = document.getElementById("background");
+    const $congratulation = document.getElementById("congratulation");
+    const $moveCounter = document.getElementById("moveCounter");
 
     for (let row = 0; row < game.field.height; row += 1) {
         const $foregroundRow = document.createElement("tr");
@@ -305,7 +315,10 @@ window.addEventListener("load", () => {
                 toCol = col;
 
                 game.moveCat(fromRow, fromCol, toRow, toCol);
+
                 updateTileData($background, $foreground, game);
+                $congratulation.style.visibility = game.isWon() ? "visible" : "hidden";
+                $moveCounter.innerText = String(game.moveCount);
 
                 fromRow = toRow = row;
                 fromCol = toCol = col;
@@ -320,4 +333,6 @@ window.addEventListener("load", () => {
     }
 
     updateTileData($background, $foreground, game);
+    $congratulation.style.visibility = "hidden";
+    $moveCounter.innerText = "0";
 });

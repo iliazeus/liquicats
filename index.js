@@ -51,10 +51,10 @@ var Field = /** @class */ (function () {
         this.height = height;
         this.tiles = tiles;
         if (tiles.length !== height) {
-            throw new Error('invalid height');
+            throw new Error("invalid height");
         }
         if (tiles.some(function (row) { return row.length !== width; })) {
-            throw new Error('invalid width');
+            throw new Error("invalid width");
         }
     }
     Field.prototype.encode = function () {
@@ -72,7 +72,7 @@ var Field = /** @class */ (function () {
         var width = arr[arr.length - 2];
         var height = arr[arr.length - 1];
         if (arr.length !== width * height + 2) {
-            throw new Error('invalid field');
+            throw new Error("invalid field");
         }
         var tiles = Array();
         for (var row = 0; row < height; row += 1) {
@@ -89,9 +89,17 @@ var Field = /** @class */ (function () {
 var Game = /** @class */ (function () {
     function Game(field) {
         this.field = field;
+        this._moveCount = 0;
     }
+    Object.defineProperty(Game.prototype, "moveCount", {
+        get: function () {
+            return this._moveCount;
+        },
+        enumerable: false,
+        configurable: true
+    });
     Game.prototype.isWon = function () {
-        return this.field.tiles.every(function (rowTiles) { return rowTiles.every(function (tile) { return tile.hasCat()
+        return this.field.tiles.some(function (rowTiles) { return rowTiles.some(function (tile) { return tile.hasCat()
             && tile.foregroundId === 1
             && tile.backgroundType === BackgroundType.Exit; }); });
     };
@@ -172,6 +180,7 @@ var Game = /** @class */ (function () {
                 fromCol += 1;
             fromTile = this.field.tiles[fromRow][fromCol];
         }
+        this._moveCount += 1;
     };
     return Game;
 }());
@@ -197,15 +206,8 @@ function updateTileData($background, $foreground, game) {
         setForegroundTileData($tile, game.field.tiles[row][col]);
     });
 }
-// const fieldData = Uint32Array.of(
-//     0x000100, 0x000100, 0x000100, 0x000100, 0x000100,
-//     0x000100, 0x311400, 0x102300, 0x202200, 0x000100,
-//     0x000100, 0x311300, 0x132300, 0x000000, 0x000100,
-//     0x000100, 0x311200, 0x132400, 0x000000, 0x000100,
-//     0x000100, 0x000100, 0x000001, 0x000100, 0x000100,
-//     5, 5
-// );
-var fieldData = Uint32Array.from(window.location.hash.slice(1).split(',').map(function (s) { return Number(s); }));
+var fieldData = Uint32Array.of(0x000100, 0x000100, 0x000100, 0x000100, 0x000100, 0x000100, 0x311400, 0x102300, 0x202200, 0x000100, 0x000100, 0x311300, 0x132300, 0x000000, 0x000100, 0x000100, 0x311200, 0x132400, 0x000000, 0x000100, 0x000100, 0x000100, 0x000001, 0x000100, 0x000100, 5, 5);
+// const fieldData = Uint32Array.from(window.location.hash.slice(1).split(",").map(s => Number(s)));
 console.log(fieldData.toString());
 var game = new Game(Field.decode(fieldData));
 var fromRow = -1;
@@ -215,6 +217,8 @@ var toCol = -1;
 window.addEventListener("load", function () {
     var $foreground = document.getElementById("foreground");
     var $background = document.getElementById("background");
+    var $congratulation = document.getElementById("congratulation");
+    var $moveCounter = document.getElementById("moveCounter");
     var _loop_1 = function (row) {
         var $foregroundRow = document.createElement("tr");
         var $backgroundRow = document.createElement("tr");
@@ -242,6 +246,8 @@ window.addEventListener("load", function () {
                 toCol = col;
                 game.moveCat(fromRow, fromCol, toRow, toCol);
                 updateTileData($background, $foreground, game);
+                $congratulation.style.visibility = game.isWon() ? "visible" : "hidden";
+                $moveCounter.innerText = String(game.moveCount);
                 fromRow = toRow = row;
                 fromCol = toCol = col;
             });
@@ -258,4 +264,6 @@ window.addEventListener("load", function () {
         _loop_1(row);
     }
     updateTileData($background, $foreground, game);
+    $congratulation.style.visibility = "hidden";
+    $moveCounter.innerText = "0";
 });
