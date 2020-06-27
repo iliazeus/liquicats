@@ -174,7 +174,13 @@ class Game {
             && toTile.foregroundType === backEndForegroundType
         ) {
             moveValid = true;
+            
+            if (toRow - fromRow === -1 && fromTile[backDirection] === Direction.Up) moveValid = false;
+            if (toRow - fromRow === +1 && fromTile[backDirection] === Direction.Down) moveValid = false;
+            if (toCol - fromCol === -1 && fromTile[backDirection] === Direction.Left) moveValid = false;
+            if (toCol - fromCol === +1 && fromTile[backDirection] === Direction.Right) moveValid = false;
         }
+
 
         if (!moveValid) return;
         
@@ -253,32 +259,38 @@ function updateTileData($background: Element, $foreground: Element, game: Game):
     });
 }
 
-const fieldData = Uint32Array.of(
-    0x000100, 0x000100, 0x000100, 0x000100, 0x000100,
-    0x000100, 0x311400, 0x102300, 0x202200, 0x000100,
-    0x000100, 0x311300, 0x132300, 0x000000, 0x000100,
-    0x000100, 0x311200, 0x132400, 0x000000, 0x000100,
-    0x000100, 0x000100, 0x000001, 0x000100, 0x000100,
-    5, 5
-);
-
-// const fieldData = Uint32Array.from(window.location.hash.slice(1).split(",").map(s => Number(s)));
-
-console.log(fieldData.toString());
-
-const game = new Game(Field.decode(fieldData));
-
 let fromRow: number = -1;
 let fromCol: number = -1;
 
 let toRow: number = -1;
 let toCol: number = -1;
 
-window.addEventListener("load", () => {
+function resetGame() {
+    // const fieldData = Uint32Array.of(
+    //     0x000100, 0x000100, 0x000100, 0x000100, 0x000100, 0x000100, 0x000100,
+    //     0x000100, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000100,
+    //     0x000100, 0x000000, 0x000000, 0x122200, 0x000100, 0x133200, 0x000100,
+    //     0x000100, 0x102300, 0x202300, 0x232300, 0x000100, 0x133300, 0x000100,
+    //     0x000100, 0x032300, 0x022300, 0x022400, 0x000100, 0x133400, 0x000100,
+    //     0x000100, 0x021200, 0x021300, 0x021400, 0x000100, 0x000001, 0x000100,
+    //     0x000100, 0x000100, 0x000100, 0x000100, 0x000100, 0x000100, 0x000100,
+    //     7, 7
+    // );
+    
+    const fieldData = Uint32Array.from(window.location.hash.slice(1).split(/\s|,/g).map(s => Number(s)));
+    window.location.hash = "";
+    
+    // console.log(fieldData.toString());
+
+    const game = new Game(Field.decode(fieldData));
+
     const $foreground = document.getElementById("foreground");
     const $background = document.getElementById("background");
     const $congratulation = document.getElementById("congratulation");
     const $moveCounter = document.getElementById("moveCounter");
+
+    $foreground.innerHTML = "";
+    $background.innerHTML = "";
 
     for (let row = 0; row < game.field.height; row += 1) {
         const $foregroundRow = document.createElement("tr");
@@ -335,4 +347,17 @@ window.addEventListener("load", () => {
     updateTileData($background, $foreground, game);
     $congratulation.style.visibility = "hidden";
     $moveCounter.innerText = "0";
+};
+
+window.addEventListener("load", () => {
+    if (window.location.hash === "") {
+        document.getElementById("level1").click();
+    } else {
+        resetGame();
+    }
+});
+
+window.addEventListener("hashchange", () => {
+    if (window.location.hash === "") return;
+    resetGame();
 });
