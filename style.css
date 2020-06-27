@@ -1,0 +1,251 @@
+#foreground {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+#background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+}
+
+.tile
+{
+    width: 64px;
+    height: 64px;
+    margin: 0;
+    padding: 0;
+    transform-origin: center;
+}
+
+.tile[data-backgroundType='0']
+{
+    background: url(images/grass.png);
+}
+
+
+.tile[data-backgroundType='1']
+{
+    background: url(images/exit.png);
+}
+
+
+.tile[data-foregroundType='1']
+{
+    background: url(images/wall.png);
+}
+
+
+.tile[data-foregroundType='2'][data-foregroundId='1'][data-tailDirection='2'] {
+    background: url(images/catHeadWhite.png);
+}
+
+.tile[data-foregroundType='2'][data-foregroundId='1'][data-tailDirection='3'] {
+    background: url(images/catHeadWhite.png);
+    transform: rotate(90deg);
+}
+
+.tile[data-foregroundType='2'][data-foregroundId='1'][data-tailDirection='0'] {
+    background: url(images/catHeadWhite.png);
+    transform: rotate(180deg);
+}
+
+.tile[data-foregroundType='2'][data-foregroundId='1'][data-tailDirection='1'] {
+    background: url(images/catHeadWhite.png);
+    transform: rotate(270deg);
+}
+
+.tile[data-foregroundType='2'][data-tailDirection='2'] {
+    background: url(images/catHeadGray.png);
+}
+
+.tile[data-foregroundType='2'][data-tailDirection='3'] {
+    background: url(images/catHeadGray.png);
+    transform: rotate(90deg);
+}
+
+.tile[data-foregroundType='2'][data-tailDirection='0'] {
+    background: url(images/catHeadGray.png);
+    transform: rotate(180deg);
+}
+
+.tile[data-foregroundType='2'][data-tailDirection='1'] {
+    background: url(images/catHeadGray.png);
+    transform: rotate(270deg);
+}
+
+
+.tile[data-foregroundType='3'][data-foregroundId='1'][data-headDirection='0'][data-tailDirection='1'] {
+    background: url(images/catBendWhite.png);
+}
+
+.tile[data-foregroundType='3'][data-foregroundId='1'][data-headDirection='1'][data-tailDirection='0'] {
+    background: url(images/catBendWhite.png);
+}
+
+.tile[data-foregroundType='3'][data-foregroundId='1'][data-headDirection='1'][data-tailDirection='2'] {
+    background: url(images/catBendWhite.png);
+    transform-origin: center;
+    transform: rotate(90deg);
+}
+
+.tile[data-foregroundType='3'][data-foregroundId='1'][data-headDirection='2'][data-tailDirection='1'] {
+    background: url(images/catBendWhite.png);
+    transform-origin: center;
+    transform: rotate(90deg);
+}
+
+.tile[data-foregroundType='3'][data-foregroundId='1'][data-headDirection='2'][data-tailDirection='3'] {
+    background: url(images/catBendWhite.png);
+    transform-origin: center;
+    transform: rotate(180deg);
+}
+
+.tile[data-foregroundType='3'][data-foregroundId='1'][data-headDirection='3'][data-tailDirection='2'] {
+    background: url(images/catBendWhite.png);
+    transform-origin: center;
+    transform: rotate(180deg);
+}
+
+.tile[data-foregroundType='3'][data-foregroundId='1'][data-headDirection='3'][data-tailDirection='0'] {
+    background: url(images/catBendWhite.png);
+    transform-origin: center;
+    transform: rotate(270deg);
+}
+
+.tile[data-foregroundType='3'][data-foregroundId='1'][data-headDirection='0'][data-tailDirection='3'] {
+    background: url(images/catBendWhite.png);
+    transform-origin: center;
+    transform: rotate(270deg);
+}
+
+.tile[data-foregroundType='3'][data-headDirection='0'][data-tailDirection='1'] {
+    background: url(images/catBendGray.png);
+}
+
+.tile[data-foregroundType='3'][data-headDirection='1'][data-tailDirection='0'] {
+    background: url(images/catBendGray.png);
+}
+
+.tile[data-foregroundType='3'][data-headDirection='1'][data-tailDirection='2'] {
+    background: url(images/catBendGray.png);
+    transform-origin: center;
+    transform: rotate(90deg);
+}
+
+.tile[data-foregroundType='3'][data-headDirection='2'][data-tailDirection='1'] {
+    background: url(images/catBendGray.png);
+    transform-origin: center;
+    transform: rotate(90deg);
+}
+
+.tile[data-foregroundType='3'][data-headDirection='2'][data-tailDirection='3'] {
+    background: url(images/catBendGray.png);
+    transform-origin: center;
+    transform: rotate(180deg);
+}
+
+.tile[data-foregroundType='3'][data-headDirection='3'][data-tailDirection='2'] {
+    background: url(images/catBendGray.png);
+    transform-origin: center;
+    transform: rotate(180deg);
+}
+
+.tile[data-foregroundType='3'][data-headDirection='3'][data-tailDirection='0'] {
+    background: url(images/catBendGray.png);
+    transform-origin: center;
+    transform: rotate(270deg);
+}
+
+.tile[data-foregroundType='3'][data-headDirection='0'][data-tailDirection='3'] {
+    background: url(images/catBendGray.png);
+    transform-origin: center;
+    transform: rotate(270deg);
+}
+
+
+.tile[data-foregroundType='3'][data-foregroundId='1'][data-headDirection='0'][data-tailDirection='2'] {
+    background: url(images/catStraightWhite.png);
+}
+
+.tile[data-foregroundType='3'][data-foregroundId='1'][data-headDirection='1'][data-tailDirection='3'] {
+    background: url(images/catStraightWhite.png);
+    transform-origin: center;
+    transform: rotate(90deg);
+}
+
+.tile[data-foregroundType='3'][data-foregroundId='1'][data-headDirection='2'][data-tailDirection='0'] {
+    background: url(images/catStraightWhite.png);
+    transform-origin: center;
+    transform: rotate(180deg);
+}
+
+.tile[data-foregroundType='3'][data-foregroundId='1'][data-headDirection='3'][data-tailDirection='1'] {
+    background: url(images/catStraightWhite.png);
+    transform-origin: center;
+    transform: rotate(270deg);
+}
+
+.tile[data-foregroundType='3'][data-headDirection='0'][data-tailDirection='2'] {
+    background: url(images/catStraightGray.png);
+}
+
+.tile[data-foregroundType='3'][data-headDirection='1'][data-tailDirection='3'] {
+    background: url(images/catStraightGray.png);
+    transform-origin: center;
+    transform: rotate(90deg);
+}
+
+.tile[data-foregroundType='3'][data-headDirection='2'][data-tailDirection='0'] {
+    background: url(images/catStraightGray.png);
+    transform-origin: center;
+    transform: rotate(180deg);
+}
+
+.tile[data-foregroundType='3'][data-headDirection='3'][data-tailDirection='1'] {
+    background: url(images/catStraightGray.png);
+    transform-origin: center;
+    transform: rotate(270deg);
+}
+
+
+.tile[data-foregroundType='4'][data-foregroundId='1'][data-headDirection='0'] {
+    background: url(images/catTailWhite.png);
+}
+
+.tile[data-foregroundType='4'][data-foregroundId='1'][data-headDirection='1'] {
+    background: url(images/catTailWhite.png);
+    transform: rotate(90deg);
+}
+
+.tile[data-foregroundType='4'][data-foregroundId='1'][data-headDirection='2'] {
+    background: url(images/catTailWhite.png);
+    transform: rotate(180deg);
+}
+
+.tile[data-foregroundType='4'][data-foregroundId='1'][data-headDirection='3'] {
+    background: url(images/catTailWhite.png);
+    transform: rotate(270deg);
+}
+
+.tile[data-foregroundType='4'][data-headDirection='0'] {
+    background: url(images/catTailGray.png);
+}
+
+.tile[data-foregroundType='4'][data-headDirection='1'] {
+    background: url(images/catTailGray.png);
+    transform: rotate(90deg);
+}
+
+.tile[data-foregroundType='4'][data-headDirection='2'] {
+    background: url(images/catTailGray.png);
+    transform: rotate(180deg);
+}
+
+.tile[data-foregroundType='4'][data-headDirection='3'] {
+    background: url(images/catTailGray.png);
+    transform: rotate(270deg);
+}
