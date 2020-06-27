@@ -135,17 +135,15 @@ class Game {
             return;
         }
 
-        if (toTile.foregroundType !== ForegroundType.Empty) {
-            return;
-        }
-
         const dist = Math.abs(toRow - fromRow) + Math.abs(toCol - fromCol);
 
         if (dist !== 1) {
             return;
         }
 
-        const otherEndForegroundType =
+        const frontEndForegroundType = fromTile.foregroundType;
+
+        const backEndForegroundType =
             fromTile.foregroundType === ForegroundType.CatHead
             ? ForegroundType.CatTail
             : ForegroundType.CatHead;
@@ -159,14 +157,37 @@ class Game {
             fromTile.foregroundType === ForegroundType.CatHead
             ? "tailDirection" as const
             : "headDirection" as const;
+
+        let moveValid = false;
+
+        if (toTile.foregroundType === ForegroundType.Empty) {
+            moveValid = true;
+        }
+
+        if (
+            toTile.foregroundId === fromTile.foregroundId
+            && toTile.foregroundType === backEndForegroundType
+        ) {
+            moveValid = true;
+        }
+
+        if (!moveValid) return;
         
-        let lastTile = toTile;
+        let lastTile = fromTile;
         let lastRow = toRow;
         let lastCol = toCol;
 
-        while (lastTile.foregroundType !== otherEndForegroundType) {
-            toTile.foregroundId = fromTile.foregroundId;
-            toTile.foregroundType = fromTile.foregroundType;
+        while (lastTile.foregroundType !== backEndForegroundType) {
+            if (fromTile !== lastTile && fromTile.foregroundType === frontEndForegroundType) {
+                toTile.foregroundId = fromTile.foregroundId;
+                toTile.foregroundType = backEndForegroundType
+            } else {
+                toTile.foregroundId = fromTile.foregroundId;
+                toTile.foregroundType = fromTile.foregroundType;
+
+                fromTile.foregroundId = 0;
+                fromTile.foregroundType = ForegroundType.Empty;
+            }
 
             if (lastRow - toRow === -1) toTile[frontDirection] = Direction.Up;
             if (lastRow - toRow === +1) toTile[frontDirection] = Direction.Down;
@@ -177,9 +198,6 @@ class Game {
             if (fromRow - toRow === +1) toTile[backDirection] = Direction.Down;
             if (fromCol - toCol === -1) toTile[backDirection] = Direction.Left;
             if (fromCol - toCol === +1) toTile[backDirection] = Direction.Right;
-
-            fromTile.foregroundId = 0;
-            fromTile.foregroundType = ForegroundType.Empty;
 
             lastTile = toTile;
             lastRow = toRow;
@@ -229,9 +247,9 @@ function updateTileData($background: Element, $foreground: Element, game: Game):
 
 // const fieldData = Uint32Array.of(
 //     0x000100, 0x000100, 0x000100, 0x000100, 0x000100,
-//     0x000100, 0x131200, 0x312400, 0x000000, 0x000100,
-//     0x000100, 0x131300, 0x312300, 0x000000, 0x000100,
-//     0x000100, 0x131400, 0x312200, 0x000000, 0x000100,
+//     0x000100, 0x311400, 0x102300, 0x202200, 0x000100,
+//     0x000100, 0x311300, 0x132300, 0x000000, 0x000100,
+//     0x000100, 0x311200, 0x132400, 0x000000, 0x000100,
 //     0x000100, 0x000100, 0x000001, 0x000100, 0x000100,
 //     5, 5
 // );
@@ -269,13 +287,19 @@ window.addEventListener("load", () => {
             $backgroundTile.setAttribute("data-row", String(row));
             $backgroundTile.setAttribute("data-col", String(col));
 
-            $foregroundTile.addEventListener("mousedown", () => {
+            $foregroundTile.addEventListener("mousedown", e => {
+                e.preventDefault();
+
                 fromRow = row;
                 fromCol = col;
             });
 
             $foregroundTile.addEventListener("mouseenter", e => {
                 if (e.buttons !== 1) return;
+
+                e.preventDefault();
+
+                if (fromRow === row && fromCol === col) return;
 
                 toRow = row;
                 toCol = col;
